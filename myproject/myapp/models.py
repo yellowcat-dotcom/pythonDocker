@@ -12,6 +12,11 @@ class Teacher(models.Model):
         return f'{self.user.last_name} {self.user.first_name} {self.father_name}'
 
 
+# class Teacher2(User):
+#     father_name = models.CharField(max_length=50)
+#     disciplines = models.CharField(max_length=50)
+# class Teacher2(User):
+
 class Group(models.Model):
     number = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -35,13 +40,11 @@ class DisciplineTeacher(models.Model):
         return f'{self.teacher} - {self.discipline}'
 
 
-
 class Record(models.Model):
     discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, related_name='records')
-    files = models.ManyToManyField('File')
     date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True, null=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='records')
+    group = models.ManyToManyField(Group)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     def formatted_date(self):
@@ -52,6 +55,7 @@ class Record(models.Model):
 
 
 class File(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name='files')
     file = models.FileField(upload_to='files/')
 
     def __str__(self):

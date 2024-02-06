@@ -2,10 +2,13 @@ from django.contrib import admin
 from .models import Teacher, Group, Discipline, DisciplineTeacher, Record, File
 
 
+class FileInline(admin.StackedInline):  # Или другой тип инлайна, например, TabularInline
+    model = File
 
 class RecordAdmin(admin.ModelAdmin):
-    fields = ('discipline', 'group', 'files', 'description')
-    list_display = ('discipline', 'group', 'formatted_date', 'teacher')
+    inlines = [FileInline]
+    fields = ('discipline', 'group', 'description')
+    list_display = ('discipline', 'formatted_date', 'teacher')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -63,7 +66,7 @@ class DisciplineAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Record, RecordAdmin)
-admin.site.register(File)
+#admin.site.register(File)
 
 admin.site.site_header = 'Привет преподаватель!'
 
