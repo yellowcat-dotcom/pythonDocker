@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, unique=True)
     father_name = models.CharField(max_length=50)
     disciplines = models.ManyToManyField('Discipline', through='DisciplineTeacher', blank=True)
 
@@ -12,20 +12,15 @@ class Teacher(models.Model):
         return f'{self.user.last_name} {self.user.first_name} {self.father_name}'
 
 
-# class Teacher2(User):
-#     father_name = models.CharField(max_length=50)
-#     disciplines = models.CharField(max_length=50)
-# class Teacher2(User):
-
 class Group(models.Model):
-    number = models.OneToOneField(User, on_delete=models.CASCADE)
+    number = models.OneToOneField(User, on_delete=models.CASCADE, limit_choices_to={'is_staff': False}, unique=True)
 
     def __str__(self):
         return str(self.number)
 
 
 class Discipline(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     groups = models.ManyToManyField(Group)
 
     def __str__(self):

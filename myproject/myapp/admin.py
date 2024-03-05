@@ -2,13 +2,15 @@ from django.contrib import admin
 from .models import Teacher, Group, Discipline, DisciplineTeacher, Record, File
 
 
-class FileInline(admin.StackedInline):  # Или другой тип инлайна, например, TabularInline
+class FileInline(admin.StackedInline):     #(admin.StackedInline)
     model = File
+
 
 class RecordAdmin(admin.ModelAdmin):
     inlines = [FileInline]
     fields = ('discipline', 'group', 'description')
-    list_display = ('discipline', 'formatted_date', 'teacher')
+    list_display = ('discipline', 'formatted_date', 'teacher', 'get_group', 'description')
+    search_fields = ['discipline__name']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -32,10 +34,16 @@ class RecordAdmin(admin.ModelAdmin):
             kwargs['queryset'] = Discipline.objects.filter(disciplineteacher__teacher=request.user.teacher)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def get_group(self, obj):
+        return ', '.join([str(group) for group in obj.group.all()])
+
+    get_group.short_description = 'Group'
+
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('number',)
+    # добавить фильтрацию по номеру группы
 
 
 @admin.register(Teacher)
@@ -66,7 +74,6 @@ class DisciplineAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Record, RecordAdmin)
-#admin.site.register(File)
+# admin.site.register(File)
 
 admin.site.site_header = 'Привет преподаватель!'
-
