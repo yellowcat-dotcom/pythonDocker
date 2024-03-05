@@ -1,0 +1,56 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 100px auto; /* Уменьшил отступ сверху для центрирования */
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h2 {
+    color: #1e90ff;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px; /* Уменьшил отступ между группами полей формы */
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px; /* Изменил радиус скругления углов */
+    box-sizing: border-box; /* Добавил для учета padding и border в общей ширине элемента */
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 3px; /* Изменил радиус скругления углов */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #007bff;
+}

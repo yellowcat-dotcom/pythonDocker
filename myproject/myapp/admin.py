@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Teacher, Group, Discipline, DisciplineTeacher, Record, File
 
 
-class FileInline(admin.StackedInline):     #(admin.StackedInline)
+class FileInline(admin.StackedInline):  # (admin.StackedInline)
     model = File
 
 
@@ -72,6 +72,21 @@ class DisciplineAdmin(admin.ModelAdmin):
 
     group_display.short_description = 'Groups'  # Устанавливаем короткое описание для колонки
 
+
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'views_count')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:  # Проверка, является ли пользователь администратором
+            return qs
+        elif hasattr(request.user, 'teacher'):  # Проверка, является ли пользователь преподавателем
+            return qs.filter(record__teacher=request.user.teacher)
+        else:
+            return qs.none()
+
+
+admin.site.register(File, FileAdmin)
 
 admin.site.register(Record, RecordAdmin)
 # admin.site.register(File)

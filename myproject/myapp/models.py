@@ -52,6 +52,17 @@ class Record(models.Model):
 class File(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name='files')
     file = models.FileField(upload_to='files/')
+    views_count = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.file)
+
+
+class FileActivity(models.Model):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Для отслеживания конкретного пользователя, если нужно
+    action = models.CharField(max_length=10)  # Может быть 'view' или 'download'
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} {self.action} {self.file}'
