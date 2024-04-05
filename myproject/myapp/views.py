@@ -1,16 +1,22 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import Group
+from .models import Group, Record, File
 
 
 # Create your views her
 
 @login_required
 def student_dashboard(request):
-    # Это представление будет доступно только студентам
-    return render(request, 'student_dashboard.html')
+    group_records = Record.objects.filter(group=request.user.group)
+
+    # # Получаем все файлы, прикрепленные к каждой записи
+    # for record in group_records:
+    #     files = File.objects.filter(record=record)
+    #     record.files = files
+
+    return render(request, 'student_dashboard.html', {'group_records': group_records})
 
 
 def login_view(request):
@@ -31,3 +37,14 @@ def login_view(request):
     else:
         # Возвращаем пустую страницу или другое представление
         return render(request, 'student_login.html')
+
+
+def logout_view(request):
+    logout(request)
+    # Перенаправить пользователя на другую страницу после выхода
+    return redirect('student_login')  # Замените 'student_login' на имя URL вашей страницы входа для студентов
+
+
+def group_records(request, group_id):
+    group_records = Record.objects.filter(group_id=group_id)
+    return render(request, 'student_dashboard.html', {'group_records': group_records})

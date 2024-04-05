@@ -5,9 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
-
 </head>
+<style>
+
+.rec {
+    background-color: #d8d9dc;
+    padding: 10px;
+    margin: 10px auto;
+    width: calc(100% - 60px);
+    border-radius: 10px;
+}
+.date {
+    position: relative; /* Абсолютное позиционирование */
+    bottom: 0;
+    text-align: right;
+
+}
+</style>
 <body>
+
+<form method="post" action="{% url 'student_logout' %}">
+    {% csrf_token %}
+    <input type="submit" value="Выход">
+</form>
+
 <h2>Student Login!!!!</h2>
+
+{% for record in group_records %}
+<div class="rec">
+
+    <h2>{{ record.discipline.name }}</h2> {{ record.description }}
+    {% if record.files.all %}
+        <ul>
+            {% for file in record.files.all %}
+                <li><a href="{{ file.file.url }}" target="_blank">{{ file }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="date">{{ record.formatted_date }}</div>
+</div>
+{% empty %}
+    <li>
+        No records available.
+    </li>
+
+{% endfor %}
+
 </body>
 </html>
